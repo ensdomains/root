@@ -7,11 +7,20 @@ import "./Ownable.sol";
 contract Root is Ownable {
 
     ENS public ens;
-    DNSSEC public dnssec;
+    DNSSEC public oracle;
 
-    constructor(ENS _ens, DNSSEC _dnssec) public {
+    constructor(ENS _ens, DNSSEC _oracle) public {
         ens = _ens;
-        dnssec = _dnssec;
+        oracle = _oracle;
+    }
+
+    function registerTLD(bytes name, bytes proof) external {
+
+    }
+
+    // @todo we should limit the rights here
+    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public {
+
     }
 
 }
