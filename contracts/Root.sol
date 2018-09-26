@@ -9,6 +9,8 @@ contract Root is Ownable {
     ENS public ens;
     DNSSEC public oracle;
 
+    event TLDRegistered(bytes32 indexed node, address indexed registrar);
+
     constructor(ENS _ens, DNSSEC _oracle) public {
         ens = _ens;
         oracle = _oracle;
@@ -19,7 +21,7 @@ contract Root is Ownable {
     }
 
     // @todo we should limit the rights here
-    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) public {
+    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
 
     }
 
