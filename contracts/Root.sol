@@ -32,7 +32,7 @@ contract Root is Ownable {
 
     // @todo we should limit the rights here
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
-
+        ens.setSubnodeOwner(node, label, owner);
     }
 
     function getLabel(bytes memory name) internal view returns (bytes32) {
