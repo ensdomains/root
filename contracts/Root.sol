@@ -39,10 +39,9 @@ contract Root is Ownable {
     function getLabel(bytes memory name) internal view returns (bytes32) {
         uint len = name.readUint8(0);
 
-//        require(name.readUint8(len + second + 2) == 0);
+        require(name.readUint8(len + 2) == 0); // @todo is this correct?
 
         return name.keccak(1, len);
     }
-
 
 }
