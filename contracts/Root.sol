@@ -10,6 +10,7 @@ contract Root is Ownable {
     DNSSEC public oracle;
 
     address public constant DEFAULT_REGISTRAR = 0x0; // @todo, also should we assume this to be a constant?
+    bytes32 public constant ROOT = keccak256(bytes32(0));
 
     event TLDRegistered(bytes32 indexed node, address indexed registrar);
 
@@ -22,16 +23,16 @@ contract Root is Ownable {
         proof = oracle.submitRRSets(input, proof);
 
         bytes32 label = getLabel(name);
-        bytes32 root = keccak256(bytes32(0));
 
         address addr = DEFAULT_REGISTRAR; // @todo should either be our registrar address or another given the TLD record supplies one.
 
-        ens.setSubnodeOwner(root, label, addr);
-        emit TLDRegistered(keccak256(root, label), addr);
+        ens.setSubnodeOwner(ROOT, label, addr);
+        emit TLDRegistered(keccak256(ROOT, label), addr);
     }
 
     // @todo we should limit the rights here
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
+        require(node == ROOT); // @todo this is my method of limiting so that we can't steal domains
         ens.setSubnodeOwner(node, label, owner);
     }
 
