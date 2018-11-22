@@ -26,6 +26,8 @@ contract Root is Ownable {
 
         address addr = DEFAULT_REGISTRAR; // @todo should either be our registrar address or another given the TLD record supplies one.
 
+        require(ens.owner(keccak256(ROOT_NODE, label) != addr);
+        
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
         emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
     }
