@@ -47,6 +47,18 @@ contract Root is Ownable {
         ens.setSubnodeOwner(node, label, owner);
     }
 
+    function setResolver(bytes32 node, address resolver) public onlyOwner {
+        ens.setResolver(node, resolver);
+    }
+
+    function setOwner(bytes32 node, address owner) public onlyOwner {
+        ens.setOwner(node, owner);
+    }
+
+    function setTTL(bytes32 node, uint64 ttl) public onlyOwner {
+        ens.setTTL(node, ttl);
+    }
+
     function getLabel(bytes memory name) internal view returns (bytes32) {
         uint len = name.readUint8(0);
 
