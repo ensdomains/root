@@ -13,7 +13,7 @@ contract Root is Ownable {
     using Buffer for Buffer.buffer;
 
     address public constant DEFAULT_REGISTRAR = 0x0; // @todo, also should we assume this to be a constant?
-    bytes32 public constant ROOT = keccak256(bytes32(0));
+    bytes32 public constant ROOT_NODE = keccak256(bytes32(0));
 
     uint16 constant CLASS_INET = 1;
     uint16 constant TYPE_TXT = 16;
@@ -35,13 +35,16 @@ contract Root is Ownable {
 
         address addr = getRegistrarAddress(name, proof);
 
-        ens.setSubnodeOwner(ROOT, label, addr);
-        emit TLDRegistered(keccak256(abi.encodePacked(ROOT, label)), addr);
+
+        require(ens.owner(keccak256(ROOT_NODE, label) != addr));
+        
+        ens.setSubnodeOwner(ROOT_NODE, label, addr);
+        emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
     }
 
     // @todo we should limit the rights here
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
-        require(node == ROOT); // @todo this is my method of limiting so that we can't steal domains
+        require(node == ROOT_NODE); // @todo this is my method of limiting so that we can't steal domains
         ens.setSubnodeOwner(node, label, owner);
     }
 
