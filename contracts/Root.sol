@@ -35,7 +35,6 @@ contract Root is Ownable {
 
         address addr = getRegistrarAddress(name, proof);
 
-
         require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
         
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
