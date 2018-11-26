@@ -47,6 +47,10 @@ contract Root is Ownable {
         ens.setSubnodeOwner(node, label, owner);
     }
 
+    function transferRoot(address owner) external onlyOwner {
+        ens.setOwner(0x0, owner);
+    }
+
     function setResolver(bytes32 node, address resolver) public onlyOwner {
         ens.setResolver(node, resolver);
     }
