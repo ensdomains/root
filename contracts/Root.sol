@@ -13,7 +13,7 @@ contract Root is Ownable {
     using Buffer for Buffer.buffer;
 
     address public constant DEFAULT_REGISTRAR = 0x0; // @todo, also should we assume this to be a constant?
-    bytes32 public constant ROOT_NODE = keccak256(bytes32(0));
+    bytes32 public constant ROOT_NODE = bytes32(0);
 
     uint16 constant CLASS_INET = 1;
     uint16 constant TYPE_TXT = 16;

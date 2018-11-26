@@ -27,7 +27,7 @@ contract('Root', function(accounts) {
     });
 
     it('should allow setting subnode when trying to owner for root domain', async () => {
-        await root.setSubnodeOwner(0x0, web3.sha3('eth'), accounts[1], {from: accounts[0]});
+        await root.setSubnodeOwner(0, web3.sha3('eth'), accounts[1], {from: accounts[0]});
     });
 
 });
