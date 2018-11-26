@@ -2,7 +2,6 @@ const Root = artifacts.require('./Root.sol');
 const DNSSEC = artifacts.require('./mocks/DummyDNSSEC.sol');
 const ENS = artifacts.require('./ENSRegistry.sol');
 const utils = require('./helpers/Utils.js');
-const namehash = require('eth-ens-namehash');
 
 contract('Root', function(accounts) {
 
