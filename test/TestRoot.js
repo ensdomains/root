@@ -37,4 +37,9 @@ contract('Root', function(accounts) {
         });
     });
 
+    it('should allow transferring ownership of the root node', async () => {
+        assert.equal(root.address, await ens.owner(0));
+        await root.transferRoot(accounts[1]);
+        assert.equal(accounts[1], await ens.owner(0));
+    });
 });
