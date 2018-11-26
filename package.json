@@ -10,7 +10,12 @@
     "@ensdomains/ens": "^0.1.1",
     "@ensdomains/dnssec-oracle": "^0.0.7",
     "@ensdomains/buffer": "^0.0.5",
-    "eth-ens-namehash": "^2.0.8"
+    "eth-ens-namehash": "^2.0.8",
+    "js-sha3": {
+      "integrity": "sha1-W4n3enR3Z5h39YxKB1JAk0sflcA=",
+      "resolved": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.6.1.tgz",
+      "version": "0.6.1"
+    }
   },
   "scripts": {
     "pretest": "truffle compile",
