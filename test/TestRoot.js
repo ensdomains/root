@@ -75,10 +75,8 @@ contract('Root', function(accounts) {
             let text = Buffer.from(`a=0x0000000000000000000000000000000000000000`, 'ascii');
 
             let proof = packet.encode({
-                questions: [ { name: '_ens.test', type: 'TXT', class: 'IN' } ],
                 answers: [
                     { name: '_ens.test', type: 'TXT', class: 'IN',  data: text },
-                    { name: '_ens.test', type: 'RRSIG',class: 'IN', data: rrsigdata('TXT', 'test', {labels: 2}) }
                 ]
             });
 
