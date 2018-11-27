@@ -29,9 +29,6 @@ contract Root is Ownable {
     }
 
     function registerTLD(bytes name, bytes proof) external {
-        // @todo make new `proveAndRegisterTLD` function
-        // bytes memory proof = oracle.submitRRSets(input, _proof);
-
         bytes32 label = getLabel(name);
 
         address addr = getRegistrarAddress(name, proof);
@@ -40,6 +37,10 @@ contract Root is Ownable {
         
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
         emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
+    }
+
+    function proveAndRegisterTLD(bytes name, bytes input, bytes proof) external {
+        registerTLD(name, oracle.submitRRSets(input, proof));
     }
 
     function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
