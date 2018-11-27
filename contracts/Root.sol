@@ -12,7 +12,7 @@ contract Root is Ownable {
     using RRUtils for *;
     using Buffer for Buffer.buffer;
 
-    address public constant DEFAULT_REGISTRAR = 0x0; // @todo, also should we assume this to be a constant?
+    address public constant DEFAULT_REGISTRAR = 0x123; // @todo, also should we assume this to be a constant?
     bytes32 public constant ROOT_NODE = bytes32(0);
 
     uint16 constant CLASS_INET = 1;
@@ -28,8 +28,9 @@ contract Root is Ownable {
         oracle = _oracle;
     }
 
-    function registerTLD(bytes name, bytes input, bytes _proof) external {
-        bytes memory proof = oracle.submitRRSets(input, _proof);
+    function registerTLD(bytes name, bytes proof) external {
+        // @todo make new `proveAndRegisterTLD` function
+        // bytes memory proof = oracle.submitRRSets(input, _proof);
 
         bytes32 label = getLabel(name);
 
@@ -66,7 +67,7 @@ contract Root is Ownable {
     function getLabel(bytes memory name) internal view returns (bytes32) {
         uint len = name.readUint8(0);
 
-        require(name.readUint8(len + 2) == 0); // @todo is this correct?
+        require(name.length == len + 2);
 
         return name.keccak(1, len);
     }
@@ -83,7 +84,7 @@ contract Root is Ownable {
         uint64 inserted;
         // Check the provided TXT record has been validated by the oracle
         (, inserted, hash) = oracle.rrdata(TYPE_TXT, buf.buf);
-        if (hash == bytes20(0) && proof.length == 0) return 0;
+        if (hash == bytes20(0) && proof.length == 0) return 0; // @TODO DOES THIS NEED TO RETURN DEFAULT_REGISTRAR?
 
         require(hash == bytes20(keccak256(proof)));
 
