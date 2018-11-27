@@ -89,5 +89,25 @@ contract('Root', function(accounts) {
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
         });
+
+        it.only('should set TLD owner to default registrar when none is provided', async () => {
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: 3600,
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+
+            assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
+        });
     });
 });
