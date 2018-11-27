@@ -28,17 +28,6 @@ contract Root is Ownable {
         oracle = _oracle;
     }
 
-    function registerTLD(bytes name, bytes proof) external {
-        bytes32 label = getLabel(name);
-
-        address addr = getRegistrarAddress(name, proof);
-
-        require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
-        
-        ens.setSubnodeOwner(ROOT_NODE, label, addr);
-        emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
-    }
-
     function proveAndRegisterTLD(bytes name, bytes input, bytes proof) external {
         registerTLD(name, oracle.submitRRSets(input, proof));
     }
@@ -51,6 +40,17 @@ contract Root is Ownable {
     // @todo maybe consider like a 7 day cool down
     function transferRoot(address owner) external onlyOwner {
         ens.setOwner(0x0, owner);
+    }
+
+    function registerTLD(bytes name, bytes proof) public {
+        bytes32 label = getLabel(name);
+
+        address addr = getRegistrarAddress(name, proof);
+
+        require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
+
+        ens.setSubnodeOwner(ROOT_NODE, label, addr);
+        emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
     }
 
     function setResolver(bytes32 node, address resolver) public onlyOwner {
