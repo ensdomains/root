@@ -90,12 +90,8 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
         });
 
-        it.only('should set TLD owner to default registrar when none is provided', async () => {
-            let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
-                klass: 1,
-                ttl: 3600,
-            });
+        it('should set TLD owner to default registrar when none is provided', async () => {
+            let proof = 0;
 
             await dnssec.setData(
                 16,

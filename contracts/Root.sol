@@ -84,7 +84,7 @@ contract Root is Ownable {
         uint64 inserted;
         // Check the provided TXT record has been validated by the oracle
         (, inserted, hash) = oracle.rrdata(TYPE_TXT, buf.buf);
-        if (hash == bytes20(0) && proof.length == 0) return 0; // @TODO DOES THIS NEED TO RETURN DEFAULT_REGISTRAR?
+        if (hash == bytes20(0) && proof.length == 0) return DEFAULT_REGISTRAR;
 
         require(hash == bytes20(keccak256(proof)));
 
