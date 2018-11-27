@@ -5,7 +5,6 @@ const ENS = artifacts.require('./ENSRegistry.sol');
 const utils = require('./helpers/Utils.js');
 const namehash = require('eth-ens-namehash');
 const dns = require('../lib/dns.js');
-const packet = require('dns-packet');
 
 contract('Root', function(accounts) {
 
@@ -70,35 +69,24 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
-        it.only('should set TLD owner to default registrar when 0x0 is provided', async () => {
+        it('should set TLD owner to default registrar when 0x0 is provided', async () => {
 
-            let text = Buffer.from(`a=0x0000000000000000000000000000000000000000`, 'ascii');
-
-            let proof = packet.encode({
-                answers: [
-                    { name: '_ens.test', type: 'TXT', class: 'IN',  data: text },
-                ]
-            });
-
-            proof = '0x' + proof.toString('hex');
-            console.log("DNS-Packet:" + proof);
-
-            console.log("DNS.js: " + dns.hexEncodeTXT({
+            let proof = dns.hexEncodeTXT({
                 name: '_ens.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=0x0000000000000000000000000000000000000000']
-            }));
+            });
 
             await dnssec.setData(
                 16,
-                hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.test.'),
                 now,
                 now,
                 proof
             );
 
-            await root.registerTLD(hexEncodeName('test'), proof);
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
         });
@@ -108,7 +96,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.test.'),
                 now,
                 now,
                 proof
@@ -120,26 +108,3 @@ contract('Root', function(accounts) {
         });
     });
 });
-
-let buffer = new Buffer([]);
-
-function hexEncodeName(name) {
-    return '0x' + packet.name.encode(name).toString('hex');
-}
-
-function rrsigdata(typeCoverd, signersName, override){
-    let obj = {
-        "typeCovered": typeCoverd,
-        "algorithm": 253,
-        "labels": 1,
-        "originalTTL": 3600,
-        "expiration": 2528174800,
-        "inception": 1526834834,
-        "keyTag": 1277,
-        "signersName": signersName,
-        "signature": buffer
-    };
-
-    return Object.assign(obj, override);
-}
-

@@ -18,8 +18,5 @@
     "watch": "npm-watch",
     "lint": "solium --dir ./contracts",
     "prepublishOnly": "truffle compile && truffle networks --clean"
-  },
-  "dependencies": {
-    "dns-packet": "^5.0.4"
   }
 }
