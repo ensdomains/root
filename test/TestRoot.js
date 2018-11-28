@@ -40,12 +40,35 @@ contract('Root', function(accounts) {
             await root.setSubnodeOwner(0, web3.sha3('eth'), accounts[1], {from: accounts[0]});
             assert.equal(accounts[1], await ens.owner(node));
         });
+
+        it('should fail when non-owner tries to set subnode', async () => {
+            try {
+                await root.setSubnodeOwner(0, web3.sha3('eth'), accounts[1], {from: accounts[1]});
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.fail('did not fail');
+        });
     });
 
-    it('should allow transferring ownership of the root node', async () => {
-        assert.equal(root.address, await ens.owner(0));
-        await root.transferRoot(accounts[1]);
-        assert.equal(accounts[1], await ens.owner(0));
+    describe('transferRoot', async () => {
+
+        it('should allow transferring ownership of the root node', async () => {
+            assert.equal(root.address, await ens.owner(0));
+            await root.transferRoot(accounts[1]);
+            assert.equal(accounts[1], await ens.owner(0));
+        });
+
+        it('should fail transferring ownership of the root node when sender is not owner', async () => {
+            try {
+                await root.transferRoot(accounts[1], {from: accounts[1]});
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.fail('did not fail');
+        });
     });
 
     describe('registerTLD', async () => {
