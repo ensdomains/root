@@ -32,6 +32,8 @@ contract('Root', function(accounts) {
             } catch (error) {
                 return utils.ensureException(error);
             }
+
+            assert.fail('did not fail');
         });
 
         it('should allow setting subnode when trying to owner for root domain', async () => {
