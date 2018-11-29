@@ -18,7 +18,7 @@ contract('Root', function(accounts) {
 
         ens = await ENS.new();
         dnssec = await DNSSEC.new();
-        root = await Root.new(ens.address, dnssec.address);
+        root = await Root.new(ens.address, dnssec.address, accounts[3]);
 
         await ens.setSubnodeOwner(0, web3.sha3('eth'), root.address, {from: accounts[0]});
         await ens.setOwner(0, root.address);
@@ -113,7 +113,7 @@ contract('Root', function(accounts) {
 
             await root.registerTLD(dns.hexEncodeName('test.'), proof);
 
-            assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
+            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
         it('should set TLD owner to default registrar when none is provided', async () => {
@@ -129,7 +129,7 @@ contract('Root', function(accounts) {
 
             await root.registerTLD(dns.hexEncodeName('test.'), proof);
 
-            assert.equal(await ens.owner(namehash.hash('test')), await root.DEFAULT_REGISTRAR.call());
+            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
     });
 });
