@@ -21,6 +21,7 @@ contract Root is Ownable {
     address public constant registrar;
 
     event TLDRegistered(bytes32 indexed node, address indexed registrar);
+    event RegistrarChanged(address indexed registrar);
 
     constructor(ENS _ens, DNSSEC _oracle, address _registrar) public {
         ens = _ens;
@@ -45,6 +46,7 @@ contract Root is Ownable {
     function setRegistrar(address _registrar) external onlyOwner {
         require(_registrar != address(0x0));
         registrar = _registrar;
+        emit RegistrarChanged(registrar);
     }
 
     function registerTLD(bytes name, bytes proof) public {
