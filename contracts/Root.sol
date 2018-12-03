@@ -12,8 +12,8 @@ contract Root is Ownable {
 
     bytes32 public constant ROOT_NODE = bytes32(0);
 
-    uint16 constant CLASS_INET = 1;
-    uint16 constant TYPE_TXT = 16;
+    uint16 constant public CLASS_INET = 1;
+    uint16 constant public TYPE_TXT = 16;
 
     ENS public ens;
     DNSSEC public oracle;
