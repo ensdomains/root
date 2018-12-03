@@ -1,5 +1,7 @@
 pragma solidity ^0.4.17;
 
+import "@ensdomains/ens/contracts/ENSRegistry.sol";
+
 contract DummyDNSSEC {
 
     uint16 expectedType;

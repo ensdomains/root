@@ -10,7 +10,7 @@ contract Root is Ownable {
 
     using BytesUtils for bytes;
 
-    bytes32 public constant ROOT_NODE = keccak256(bytes32(0));
+    bytes32 public constant ROOT_NODE = bytes32(0);
 
     uint16 constant public CLASS_INET = 1;
     uint16 constant public TYPE_TXT = 16;
@@ -18,7 +18,7 @@ contract Root is Ownable {
     ENS public ens;
     DNSSEC public oracle;
 
-    address public constant registrar;
+    address public registrar;
 
     event TLDRegistered(bytes32 indexed node, address indexed registrar);
     event RegistrarChanged(address indexed registrar);
@@ -26,7 +26,7 @@ contract Root is Ownable {
     constructor(ENS _ens, DNSSEC _oracle, address _registrar) public {
         ens = _ens;
         oracle = _oracle;
-        registrar = __registrar;
+        registrar = _registrar;
     }
 
     function proveAndRegisterTLD(bytes name, bytes input, bytes proof) external {
@@ -78,7 +78,7 @@ contract Root is Ownable {
     function getLabel(bytes memory name) internal view returns (bytes32) {
         uint len = name.readUint8(0);
 
-        require(name.readUint8(len + 2) == 0); // @todo is this correct?
+        require(name.length == len + 2);
 
         return name.keccak(1, len);
     }
