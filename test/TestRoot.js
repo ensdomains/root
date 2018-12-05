@@ -4,7 +4,15 @@ const ENS = artifacts.require('./ENSRegistry.sol');
 
 const utils = require('./helpers/Utils.js');
 const namehash = require('eth-ens-namehash');
-const dns = require('../lib/dns.js');
+const packet = require('dns-packet');
+
+const hexEncodeName = function(name){
+    return '0x' + packet.name.encode(name).toString('hex');
+}
+  
+const hexEncodeTXT = function (keys){
+    return '0x' + packet.answer.encode(keys).toString('hex');
+}  
 
 contract('Root', function(accounts) {
 
@@ -74,44 +82,46 @@ contract('Root', function(accounts) {
     describe('registerTLD', async () => {
 
         it('allows registering a TLD on ENS with a custom address', async () => {
-            let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
-                klass: 1,
+            let proof = hexEncodeTXT({
+                name: '_ens.test',
+                class: 'IN',
+                type: 'TXT',
                 ttl: 3600,
-                text: ['a=' + accounts[0]]
+                data:['a=' + accounts[0]]
             });
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                hexEncodeName('_ens.test'),
                 now,
                 now,
                 proof
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            await root.registerTLD(hexEncodeName('test'), proof);
 
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
         it('should set TLD owner to default registrar when 0x0 is provided', async () => {
 
-            let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
-                klass: 1,
+            let proof = hexEncodeTXT({
+                name: '_ens.test',
+                class: 'IN',
+                type: 'TXT',
                 ttl: 3600,
-                text: ['a=0x0000000000000000000000000000000000000000']
+                data:['a=0x0000000000000000000000000000000000000000']
             });
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                hexEncodeName('_ens.test'),
                 now,
                 now,
                 proof
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            await root.registerTLD(hexEncodeName('test'), proof);
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
@@ -121,13 +131,13 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                hexEncodeName('_ens.test'),
                 now,
                 now,
                 proof
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            await root.registerTLD(hexEncodeName('test'), proof);
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
