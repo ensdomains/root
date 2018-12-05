@@ -52,11 +52,7 @@ contract Root is Ownable {
     function registerTLD(bytes name, bytes proof) public {
         bytes32 label = getLabel(name);
 
-        address addr = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
-        if (addr == address(0x0)) {
-            addr = registrar;
-        }
-
+        address addr = DNSClaimChecker.getOwnerAddress(oracle, name, proof, registrar);
         require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
 
         ens.setSubnodeOwner(ROOT_NODE, label, addr);

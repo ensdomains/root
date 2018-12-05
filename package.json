@@ -10,7 +10,7 @@
     "@ensdomains/ens": "^0.1.1",
     "@ensdomains/dnssec-oracle": "^0.0.7",
     "@ensdomains/buffer": "^0.0.5",
-    "@ensdomains/dnsregistrar": "^0.1.1",
+    "@ensdomains/dnsregistrar": "^0.2.0",
     "eth-ens-namehash": "^2.0.8"
   },
   "scripts": {
