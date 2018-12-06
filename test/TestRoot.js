@@ -94,9 +94,26 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
-        it('should set TLD owner to default registrar when 0x0 is provided', async () => {
-
+        it.only('should allow setting TLD owner to 0x0 when it has already been set', async () => {
             let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + accounts[0]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
+
+            proof = dns.hexEncodeTXT({
                 name: '_ens.test.',
                 klass: 1,
                 ttl: 3600,
@@ -113,7 +130,7 @@ contract('Root', function(accounts) {
 
             await root.registerTLD(dns.hexEncodeName('test.'), proof);
 
-            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+            assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
         it('should set TLD owner to default registrar when none is provided', async () => {
