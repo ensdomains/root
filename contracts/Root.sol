@@ -33,9 +33,8 @@ contract Root is Ownable {
         registerTLD(name, oracle.submitRRSets(input, proof));
     }
 
-    function setSubnodeOwner(bytes32 node, bytes32 label, address owner) external onlyOwner {
-        require(node == ROOT_NODE); // @todo this is my method of limiting so that we can't steal domains
-        ens.setSubnodeOwner(node, label, owner);
+    function setSubnodeOwner(bytes32 label, address owner) external onlyOwner {
+        ens.setSubnodeOwner(ROOT_NODE, label, owner);
     }
 
     // @todo maybe consider like a 7 day cool down
