@@ -26,24 +26,14 @@ contract('Root', function(accounts) {
 
     describe('setSubnodeOwner', async () => {
 
-        it('should fail when trying to set subnode owner for non root domain', async () => {
-            try {
-                await root.setSubnodeOwner(web3.sha3('eth'), '0x123', accounts[1], {from: accounts[0]});
-            } catch (error) {
-                return utils.ensureException(error);
-            }
-
-            assert.fail('did not fail');
-        });
-
         it('should allow setting subnode when trying to owner for root domain', async () => {
-            await root.setSubnodeOwner(0, web3.sha3('eth'), accounts[1], {from: accounts[0]});
+            await root.setSubnodeOwner(web3.sha3('eth'), accounts[1], {from: accounts[0]});
             assert.equal(accounts[1], await ens.owner(node));
         });
 
         it('should fail when non-owner tries to set subnode', async () => {
             try {
-                await root.setSubnodeOwner(0, web3.sha3('eth'), accounts[1], {from: accounts[1]});
+                await root.setSubnodeOwner(web3.sha3('eth'), accounts[1], {from: accounts[1]});
             } catch (error) {
                 return utils.ensureException(error);
             }
