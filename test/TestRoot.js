@@ -94,7 +94,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
-        it.only('should allow setting TLD owner to 0x0 when it has already been set', async () => {
+        it('should allow setting TLD owner to 0x0 when it has already been set', async () => {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.test.',
                 klass: 1,
