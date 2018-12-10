@@ -155,7 +155,7 @@ contract('Root', function(accounts) {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.test.',
                 klass: 1,
-                ttl: 3600,
+                ttl: ttl,
                 text: ['a=' + accounts[0]]
             });
 
