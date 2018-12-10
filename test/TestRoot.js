@@ -149,7 +149,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
-        it.only('should fail to register when record is expired', async () => {
+        it('should fail to register when record is expired', async () => {
             const ttl = 3600;
 
             let proof = dns.hexEncodeTXT({
