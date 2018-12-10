@@ -138,5 +138,32 @@ contract('Root', function(accounts) {
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
+
+        it('should fail to register when record is expired', async () => {
+            const ttl = 3600;
+
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: ttl,
+                text: ['a=' + accounts[0]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now - (ttl * 2),
+                now - (ttl * 2),
+                proof
+            );
+
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.fail('did not fail');
+        });
     });
 });
