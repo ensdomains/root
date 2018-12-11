@@ -165,5 +165,46 @@ contract('Root', function(accounts) {
 
             assert.fail('did not fail');
         });
+
+        it('allows changing a registered TLD on ENS', async () => {
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + accounts[0]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
+
+            proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + accounts[1]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[1]);
+        });
+
     });
 });
