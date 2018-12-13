@@ -206,5 +206,37 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[1]);
         });
 
+        it('should not allow updating to default registrar when proof is still in oracle', async () => {
+            let ttl = 3600;
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: ttl,
+                text: ['a=' + accounts[0]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
+
+            utils.advanceTime(ttl * 2);
+
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), 0);
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.fail('did not fail');
+        });
+
     });
 });
