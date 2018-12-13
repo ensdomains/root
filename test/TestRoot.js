@@ -230,10 +230,10 @@ contract('Root', function(accounts) {
                 dns.hexEncodeName('_ens.test.'),
                 now,
                 now,
-                ''
+                0
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), '');
+            await root.registerTLD(dns.hexEncodeName('test.'), 0);
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
