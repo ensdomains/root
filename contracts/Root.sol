@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
 import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
-import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
+import "./DNSClaimChecker.sol";
 import "./Ownable.sol";
 
 contract Root is Ownable {

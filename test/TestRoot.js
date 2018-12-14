@@ -206,5 +206,27 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[1]);
         });
 
+        it('allows registering a TLD on ENS with a custom address', async () => {
+            let address = '0xbathtub000000000000000000000000000000000';
+
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + address]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+
+            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+        });
     });
 });
