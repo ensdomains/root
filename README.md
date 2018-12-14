@@ -1,6 +1,6 @@
 # Root
 
-[![Build Status](https://travis-ci.org/ensdomains/root.svg?branch=master)](https://travis-ci.org/ensdomains/dnssec-oracle) [![License](https://img.shields.io/badge/License-BSD--2--Clause-blue.svg)](LICENSE)
+[![Build Status](https://travis-ci.org/ensdomains/root.svg?branch=master)](https://travis-ci.org/ensdomains/root) [![License](https://img.shields.io/badge/License-BSD--2--Clause-blue.svg)](LICENSE)
 
 This is a proof-of-concept implementation of the new ENS Root layered on top of the previous one as its owner.
 
