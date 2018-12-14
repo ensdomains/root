@@ -50,7 +50,7 @@ library DNSClaimChecker {
             }
         }
 
-        return 0;
+        return defaultAddr;
     }
 
     function parseRR(bytes memory rdata, uint idx, address defaultAddr) internal pure returns (address) {
