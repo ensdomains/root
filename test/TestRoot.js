@@ -237,7 +237,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
-        it('allows registering a TLD on ENS with a custom address', async () => {
+        it('should set to default address when invalid address is provided', async () => {
             let address = '0xbathtub000000000000000000000000000000000';
 
             let proof = dns.hexEncodeTXT({
