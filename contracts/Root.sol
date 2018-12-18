@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
 import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
-import "./DNSClaimChecker.sol";
+import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
 import "./Ownable.sol";
 
 contract Root is Ownable {
@@ -51,7 +51,7 @@ contract Root is Ownable {
     function registerTLD(bytes name, bytes proof) public {
         bytes32 label = getLabel(name);
 
-        address addr = DNSClaimChecker.getOwnerAddress(oracle, name, proof, registrar);
+        address addr = getAddress(name, proof);
         require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
 
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
@@ -76,5 +76,17 @@ contract Root is Ownable {
         require(name.length == len + 2);
 
         return name.keccak(1, len);
+    }
+
+    function getAddress(bytes name, bytes proof) internal view returns (address) {
+        address addr;
+        bool found;
+
+        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
+        if (!found) {
+            return registrar;
+        }
+
+        return addr;
     }
 }
