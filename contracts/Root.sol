@@ -4,11 +4,13 @@ import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
 import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
 import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
+import "@ensdomains/buffer/contracts/Buffer.sol";
 import "./Ownable.sol";
 
 contract Root is Ownable {
 
     using BytesUtils for bytes;
+    using Buffer for Buffer.buffer;
 
     bytes32 public constant ROOT_NODE = bytes32(0);
 
@@ -84,10 +86,7 @@ contract Root is Ownable {
 
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
         if (!found) {
-            bytes20 hash;
-            (,, hash) = oracle.rrdata(TYPE_TXT, name);
-
-            if (hash == bytes20(0)) {
+            if (getHash(name) == bytes20(0)) {
                 return 0x0;
             }
 
@@ -95,5 +94,17 @@ contract Root is Ownable {
         }
 
         return addr;
+    }
+
+    function getHash(bytes name) internal view returns (bytes20) {
+        Buffer.buffer memory buf;
+        buf.init(name.length + 5);
+        buf.append("\x04_ens");
+        buf.append(name);
+
+        bytes20 hash;
+        (,, hash) = oracle.rrdata(TYPE_TXT, buf.buf);
+
+        return hash;
     }
 }
