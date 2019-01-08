@@ -41,7 +41,7 @@ contract Root is Ownable {
 
     // @todo maybe consider like a 7 day cool down
     function transferRoot(address owner) external onlyOwner {
-        ens.setOwner(0x0, owner);
+        ens.setOwner(ROOT_NODE, owner);
     }
 
     function setRegistrar(address _registrar) external onlyOwner {
