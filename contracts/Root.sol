@@ -4,6 +4,7 @@ import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
 import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
 import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
+import "@ensdomains/buffer/contracts/Buffer.sol";
 import "./Ownable.sol";
 
 contract Root is Ownable {
@@ -82,7 +83,13 @@ contract Root is Ownable {
         address addr;
         bool found;
 
-        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
+        // Add "nic." to the front of the name.
+        Buffer.buffer memory buffer;
+        buf.init(name.length + 4);
+        buf.append("\x04nic");
+        buf.append(name);
+
+        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buffer.buf, proof);
         if (!found) {
             return registrar;
         }
