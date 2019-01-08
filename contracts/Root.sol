@@ -84,6 +84,13 @@ contract Root is Ownable {
 
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
         if (!found) {
+            bytes20 hash;
+            (,, hash) = oracle.rrdata(TYPE_TXT, buf.buf);
+
+            if (hash == bytes20(0)) {
+                return 0x0;
+            }
+
             return registrar;
         }
 
