@@ -10,6 +10,7 @@ import "./Ownable.sol";
 contract Root is Ownable {
 
     using BytesUtils for bytes;
+    using Buffer for Buffer.buffer;
 
     bytes32 public constant ROOT_NODE = bytes32(0);
 
@@ -84,12 +85,12 @@ contract Root is Ownable {
         bool found;
 
         // Add "nic." to the front of the name.
-        Buffer.buffer memory buffer;
+        Buffer.buffer memory buf;
         buf.init(name.length + 4);
         buf.append("\x03nic");
         buf.append(name);
 
-        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buffer.buf, proof);
+        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
             return registrar;
         }

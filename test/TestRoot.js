@@ -65,7 +65,7 @@ contract('Root', function(accounts) {
 
         it('allows registering a TLD on ENS with a custom address', async () => {
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=' + accounts[0]]
@@ -73,7 +73,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -86,7 +86,7 @@ contract('Root', function(accounts) {
 
         it('should allow setting TLD owner to 0x0 when it has already been set', async () => {
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=' + accounts[0]]
@@ -94,7 +94,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -112,7 +112,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -128,7 +128,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -143,7 +143,7 @@ contract('Root', function(accounts) {
             const ttl = 3600;
 
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: ttl,
                 text: ['a=' + accounts[0]]
@@ -151,7 +151,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now - (ttl * 2),
                 now - (ttl * 2),
                 proof
@@ -176,7 +176,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -187,7 +187,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
 
             proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=' + accounts[1]]
@@ -195,7 +195,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -208,7 +208,7 @@ contract('Root', function(accounts) {
 
         it('should transfer back to default registrar if TXT record is deleted', async () => {
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=' + accounts[0]]
@@ -216,7 +216,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -227,7 +227,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 ''
@@ -241,7 +241,7 @@ contract('Root', function(accounts) {
             let address = '0xbathtub000000000000000000000000000000000';
 
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=' + address]
@@ -249,7 +249,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
@@ -264,7 +264,7 @@ contract('Root', function(accounts) {
         it('should not allow updating to default registrar when proof is still in oracle', async () => {
             let ttl = 3600;
             let proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: ttl,
                 text: ['a=' + accounts[0]]
@@ -272,7 +272,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
-                dns.hexEncodeName('_ens.test.'),
+                dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
                 proof
