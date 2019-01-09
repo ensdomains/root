@@ -4,11 +4,13 @@ import "@ensdomains/ens/contracts/ENS.sol";
 import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
 import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
 import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
+import "@ensdomains/buffer/contracts/Buffer.sol";
 import "./Ownable.sol";
 
 contract Root is Ownable {
 
     using BytesUtils for bytes;
+    using Buffer for Buffer.buffer;
 
     bytes32 public constant ROOT_NODE = bytes32(0);
 
@@ -79,10 +81,16 @@ contract Root is Ownable {
     }
 
     function getAddress(bytes name, bytes proof) internal view returns (address) {
+
+        // Add "nic." to the front of the name.
+        Buffer.buffer memory buf;
+        buf.init(name.length + 4);
+        buf.append("\x03nic");
+        buf.append(name);
+
         address addr;
         bool found;
-
-        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
+        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
             return registrar;
         }
