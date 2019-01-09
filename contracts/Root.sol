@@ -81,10 +81,16 @@ contract Root is Ownable {
     }
 
     function getAddress(bytes name, bytes proof) internal view returns (address) {
+
+        // Add "nic." to the front of the name.
+        Buffer.buffer memory buf;
+        buf.init(name.length + 4);
+        buf.append("\x03nic");
+        buf.append(name);
+
         address addr;
         bool found;
-
-        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, name, proof);
+        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
             if (getHash(name) == bytes20(0)) {
                 return 0x0;
