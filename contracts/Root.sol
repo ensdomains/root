@@ -16,6 +16,7 @@ contract Root is Ownable {
 
     uint16 constant public CLASS_INET = 1;
     uint16 constant public TYPE_TXT = 16;
+    uint16 constant public TYPE_SOA = 6;
 
     ENS public ens;
     DNSSEC public oracle;
@@ -109,7 +110,7 @@ contract Root is Ownable {
         buf.append(name);
 
         bytes20 hash;
-        (,, hash) = oracle.rrdata(TYPE_TXT, buf.buf);
+        (,, hash) = oracle.rrdata(TYPE_SOA, buf.buf);
 
         return hash;
     }
