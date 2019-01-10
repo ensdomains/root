@@ -93,7 +93,7 @@ contract Root is Ownable {
         bool found;
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
-            if (getHash(name) == bytes20(0)) {
+            if (getSOAHash(buf.buf) == bytes20(0)) {
                 return 0x0;
             }
 
@@ -103,7 +103,7 @@ contract Root is Ownable {
         return addr;
     }
 
-    function getHash(bytes name) internal view returns (bytes20) {
+    function getSOAHash(bytes name) internal view returns (bytes20) {
         Buffer.buffer memory buf;
         buf.init(name.length + 5);
         buf.append("\x04_ens");
