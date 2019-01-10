@@ -255,6 +255,14 @@ contract('Root', function(accounts) {
                 proof
             );
 
+            await dnssec.setData(
+                6,
+                dns.hexEncodeName('_ens.nic.test.'),
+                now,
+                now,
+                proof
+            );
+
             await root.registerTLD(dns.hexEncodeName('test.'), proof);
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
