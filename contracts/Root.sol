@@ -16,6 +16,7 @@ contract Root is Ownable {
 
     uint16 constant public CLASS_INET = 1;
     uint16 constant public TYPE_TXT = 16;
+    uint16 constant public TYPE_SOA = 6;
 
     ENS public ens;
     DNSSEC public oracle;
@@ -81,7 +82,6 @@ contract Root is Ownable {
     }
 
     function getAddress(bytes name, bytes proof) internal view returns (address) {
-
         // Add "nic." to the front of the name.
         Buffer.buffer memory buf;
         buf.init(name.length + 4);
@@ -92,9 +92,24 @@ contract Root is Ownable {
         bool found;
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
+            // If there is no TXT record, we ensure that the TLD actually exists with a SOA record.
+            // This prevents registering bogus TLDs.
+            require(getSOAHash(buf.buf) != bytes20(0));
             return registrar;
         }
 
         return addr;
+    }
+
+    function getSOAHash(bytes name) internal view returns (bytes20) {
+        Buffer.buffer memory buf;
+        buf.init(name.length + 5);
+        buf.append("\x04_ens");
+        buf.append(name);
+
+        bytes20 hash;
+        (,, hash) = oracle.rrdata(TYPE_SOA, buf.buf);
+
+        return hash;
     }
 }

@@ -123,8 +123,27 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
-        it('should set TLD owner to default registrar when none is provided', async () => {
-            let proof = 0;
+        it('should set TLD owner to default registrar when no TXT is provided', async () => {
+            await dnssec.setData(
+                6,
+                dns.hexEncodeName('_ens.nic.test.'),
+                now,
+                now,
+                '0x01234567'
+            );
+
+            await root.registerTLD(dns.hexEncodeName('test.'), '');
+
+            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+        });
+
+        it('should not allow submitting empty proof when SOA record is not present', async () => {
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.nic.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + accounts[0]]
+            });
 
             await dnssec.setData(
                 16,
@@ -134,9 +153,14 @@ contract('Root', function(accounts) {
                 proof
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), '');
 
-            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
         it('should fail to register when record is expired', async () => {
@@ -206,7 +230,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[1]);
         });
 
-        it('should transfer back to default registrar if TXT record is deleted', async () => {
+        it('should not transfer back to default registrar if TXT record is deleted', async () => {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.nic.test.',
                 klass: 1,
@@ -233,8 +257,13 @@ contract('Root', function(accounts) {
                 ''
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), '');
-            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), '');
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
         it('should set to default address when invalid address is provided', async () => {
@@ -249,6 +278,14 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 16,
+                dns.hexEncodeName('_ens.nic.test.'),
+                now,
+                now,
+                proof
+            );
+
+            await dnssec.setData(
+                6,
                 dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
