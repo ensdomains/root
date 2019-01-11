@@ -82,7 +82,6 @@ contract Root is Ownable {
     }
 
     function getAddress(bytes name, bytes proof) internal view returns (address) {
-
         // Add "nic." to the front of the name.
         Buffer.buffer memory buf;
         buf.init(name.length + 4);
@@ -93,10 +92,7 @@ contract Root is Ownable {
         bool found;
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
-            if (getSOAHash(buf.buf) == bytes20(0)) {
-                revert();
-            }
-
+            require(getSOAHash(buf.buf) != bytes20(0));
             return registrar;
         }
 

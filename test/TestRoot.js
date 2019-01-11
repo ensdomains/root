@@ -123,11 +123,11 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
-        it('should set TLD owner to default registrar when none is provided', async () => {
-            let proof = 0;
+        it('should set TLD owner to default registrar when no TXT is provided', async () => {
+            let proof = '0x01234567';
 
             await dnssec.setData(
-                16,
+                6,
                 dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
