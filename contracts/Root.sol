@@ -92,6 +92,8 @@ contract Root is Ownable {
         bool found;
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
+            // If there is no TXT record, we ensure that the TLD actually exists with a SOA record.
+            // This prevents registering bogus TLDs.
             require(getSOAHash(buf.buf) != bytes20(0));
             return registrar;
         }
