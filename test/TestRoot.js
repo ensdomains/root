@@ -137,6 +137,32 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
+        it('should not allow submitting empty proof when SOA record is not present', async () => {
+            let proof = dns.hexEncodeTXT({
+                name: '_ens.nic.test.',
+                klass: 1,
+                ttl: 3600,
+                text: ['a=' + accounts[0]]
+            });
+
+            await dnssec.setData(
+                16,
+                dns.hexEncodeName('_ens.nic.test.'),
+                now,
+                now,
+                proof
+            );
+
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), '');
+
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
+        });
+
         it('should fail to register when record is expired', async () => {
             const ttl = 3600;
 
