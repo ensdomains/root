@@ -124,17 +124,15 @@ contract('Root', function(accounts) {
         });
 
         it('should set TLD owner to default registrar when no TXT is provided', async () => {
-            let proof = '0x01234567';
-
             await dnssec.setData(
                 6,
                 dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
-                proof
+                '0x01234567'
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), proof);
+            await root.registerTLD(dns.hexEncodeName('test.'), '');
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
