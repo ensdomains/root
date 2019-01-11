@@ -94,7 +94,7 @@ contract Root is Ownable {
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
             if (getSOAHash(buf.buf) == bytes20(0)) {
-                return 0x0;
+                revert();
             }
 
             return registrar;

@@ -206,7 +206,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[1]);
         });
 
-        it('should transfer back to default registrar if TXT record is deleted', async () => {
+        it('should not transfer back to default registrar if TXT record is deleted', async () => {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.nic.test.',
                 klass: 1,
@@ -233,8 +233,13 @@ contract('Root', function(accounts) {
                 ''
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), '');
-            assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
+            try {
+                await root.registerTLD(dns.hexEncodeName('test.'), '');
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
         it('should set to default address when invalid address is provided', async () => {
