@@ -137,6 +137,24 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
 
+        it('should not allow setting ETH tld', async () => {
+            await dnssec.setData(
+                6,
+                dns.hexEncodeName('_ens.nic.eth.'),
+                now,
+                now,
+                '0x01234567'
+            );
+
+            try {
+                await root.registerTLD(dns.hexEncodeName('eth.'), '');
+            } catch (error) {
+                return utils.ensureException(error);
+            }
+
+            assert.fail('did not fail');
+        });
+
         it('should not allow submitting empty proof when SOA record is not present', async () => {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.nic.test.',
@@ -155,7 +173,6 @@ contract('Root', function(accounts) {
 
             try {
                 await root.registerTLD(dns.hexEncodeName('test.'), '');
-
             } catch (error) {
                 return utils.ensureException(error);
             }

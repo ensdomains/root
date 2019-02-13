@@ -13,6 +13,7 @@ contract Root is Ownable {
     using Buffer for Buffer.buffer;
 
     bytes32 public constant ROOT_NODE = bytes32(0);
+    bytes32 public constant ETH_NODE = keccak("eth");
 
     uint16 constant public CLASS_INET = 1;
     uint16 constant public TYPE_TXT = 16;
@@ -56,6 +57,7 @@ contract Root is Ownable {
 
         address addr = getAddress(name, proof);
         require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
+        require(label != ETH_NODE);
 
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
         emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
