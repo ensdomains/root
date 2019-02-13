@@ -4,15 +4,15 @@
   "requires": true,
   "lockfileVersion": 1,
   "devDependencies": {
-    "eth-gas-reporter": "^0.1.2",
-    "solium": "^1.0.4",
-    "truffle": "^4.0.0",
-    "@ensdomains/ens": "^0.1.1",
-    "@ensdomains/dnssec-oracle": "^0.0.7",
-    "@ensdomains/buffer": "^0.0.5",
+    "@ensdomains/buffer": "^0.0.6",
     "@ensdomains/dnsregistrar": "^0.2.2",
+    "@ensdomains/dnssec-oracle": "^0.0.8",
+    "@ensdomains/ens": "^0.3.0",
+    "bluebird": "^3.5.2",
     "eth-ens-namehash": "^2.0.8",
-    "bluebird": "^3.5.2"
+    "eth-gas-reporter": "^0.1.2",
+    "solium": "^1.2.3",
+    "truffle": "^4.0.0"
   },
   "scripts": {
     "pretest": "truffle compile",
