@@ -13,7 +13,7 @@ contract Root is Ownable {
     using Buffer for Buffer.buffer;
 
     bytes32 public constant ROOT_NODE = bytes32(0);
-    bytes32 public constant ETH_NODE = keccak("eth");
+    bytes32 public constant ETH_NODE = keccak256("eth");
 
     uint16 constant public CLASS_INET = 1;
     uint16 constant public TYPE_TXT = 16;
