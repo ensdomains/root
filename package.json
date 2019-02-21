@@ -6,11 +6,11 @@
   "devDependencies": {
     "eth-gas-reporter": "^0.1.2",
     "solium": "^1.0.4",
-    "truffle": "^4.0.0",
+    "truffle": "^5.0.0",
     "@ensdomains/ens": "^0.3.0",
     "@ensdomains/dnssec-oracle": "^0.1.0",
     "@ensdomains/buffer": "^0.0.6",
-    "@ensdomains/dnsregistrar": "^0.2.3",
+    "@ensdomains/dnsregistrar": "^0.3.0",
     "@ensdomains/test-utils": "^1.0.0",
     "eth-ens-namehash": "^2.0.8",
     "bluebird": "^3.5.2"
