@@ -1,4 +1,4 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.5.0;
 
 import "@ensdomains/ens/contracts/ENSRegistry.sol";
 
@@ -12,7 +12,7 @@ contract DummyDNSSEC {
 
     mapping (bytes32 => Data) private datas;
 
-    function setData(uint16 _expectedType, bytes _expectedName, uint32 _inception, uint64 _inserted, bytes _proof) public {
+    function setData(uint16 _expectedType, bytes memory _expectedName, uint32 _inception, uint64 _inserted, bytes memory _proof) public {
         Data storage rr = datas[keccak256(_expectedType, _expectedName)];
         rr.inception = _inception;
         rr.inserted = _inserted;
@@ -24,8 +24,8 @@ contract DummyDNSSEC {
         }
     }
 
-    function rrdata(uint16 dnstype, bytes name) public view returns (uint32, uint64, bytes20) {
-        Data rr = datas[keccak256(dnstype, name)];
+    function rrdata(uint16 dnstype, bytes memory name) public view returns (uint32, uint64, bytes20) {
+        Data storage rr = datas[keccak256(dnstype, name)];
         return (rr.inception, rr.inserted, rr.hash);
     }
 }

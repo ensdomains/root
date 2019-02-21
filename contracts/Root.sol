@@ -33,7 +33,7 @@ contract Root is Ownable {
         registrar = _registrar;
     }
 
-    function proveAndRegisterTLD(bytes name, bytes input, bytes proof) external {
+    function proveAndRegisterTLD(bytes calldata name, bytes calldata input, bytes calldata proof) external {
         registerTLD(name, oracle.submitRRSets(input, proof));
     }
 
@@ -47,7 +47,7 @@ contract Root is Ownable {
         emit RegistrarChanged(registrar);
     }
 
-    function registerTLD(bytes name, bytes proof) public {
+    function registerTLD(bytes memory name, bytes memory proof) public {
         bytes32 label = getLabel(name);
 
         address addr = getAddress(name, proof);
@@ -78,7 +78,7 @@ contract Root is Ownable {
         return name.keccak(1, len);
     }
 
-    function getAddress(bytes name, bytes proof) internal view returns (address) {
+    function getAddress(bytes memory name, bytes memory proof) internal view returns (address) {
         // Add "nic." to the front of the name.
         Buffer.buffer memory buf;
         buf.init(name.length + 4);
@@ -98,7 +98,7 @@ contract Root is Ownable {
         return addr;
     }
 
-    function getSOAHash(bytes name) internal view returns (bytes20) {
+    function getSOAHash(bytes memory name) internal view returns (bytes20) {
         Buffer.buffer memory buf;
         buf.init(name.length + 5);
         buf.append("\x04_ens");
