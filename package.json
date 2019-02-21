@@ -8,7 +8,7 @@
     "solium": "^1.0.4",
     "truffle": "^4.0.0",
     "@ensdomains/ens": "^0.3.0",
-    "@ensdomains/dnssec-oracle": "^0.0.8",
+    "@ensdomains/dnssec-oracle": "^0.1.0",
     "@ensdomains/buffer": "^0.0.6",
     "@ensdomains/dnsregistrar": "^0.2.2",
     "@ensdomains/test-utils": "^1.0.0",
