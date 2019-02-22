@@ -13,7 +13,12 @@
     "@ensdomains/dnsregistrar": "^0.3.0",
     "@ensdomains/test-utils": "^1.0.0",
     "eth-ens-namehash": "^2.0.8",
-    "bluebird": "^3.5.2"
+    "bluebird": "^3.5.2",
+    "js-sha3": {
+      "integrity": "sha1-W4n3enR3Z5h39YxKB1JAk0sflcA=",
+      "resolved": "https://registry.npmjs.org/js-sha3/-/js-sha3-0.6.1.tgz",
+      "version": "0.6.1"
+    }
   },
   "scripts": {
     "pretest": "truffle compile",

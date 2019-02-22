@@ -2,9 +2,10 @@ const Root = artifacts.require('./Root.sol');
 const DNSSEC = artifacts.require('./mocks/DummyDNSSEC.sol');
 const ENS = artifacts.require('./ENSRegistry.sol');
 
-const { exception } = require('test-utils');
+const { exception, evm } = require('@ensdomains/test-utils');
 const namehash = require('eth-ens-namehash');
 const dns = require('../lib/dns.js');
+const sha3 = require('js-sha3').keccak_256;
 
 contract('Root', function(accounts) {
 
@@ -20,20 +21,20 @@ contract('Root', function(accounts) {
         dnssec = await DNSSEC.new();
         root = await Root.new(ens.address, dnssec.address, accounts[3]);
 
-        await ens.setSubnodeOwner(0, web3.sha3('eth'), root.address, {from: accounts[0]});
-        await ens.setOwner(0, root.address);
+        await ens.setSubnodeOwner('0x0', '0x' + sha3('eth'), root.address, {from: accounts[0]});
+        await ens.setOwner('0x0', root.address);
     });
 
     describe('setSubnodeOwner', async () => {
 
         it('should allow setting subnode when trying to owner for root domain', async () => {
-            await root.setSubnodeOwner(web3.sha3('eth'), accounts[1], {from: accounts[0]});
+            await root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[0]});
             assert.equal(accounts[1], await ens.owner(node));
         });
 
         it('should fail when non-owner tries to set subnode', async () => {
             try {
-                await root.setSubnodeOwner(web3.sha3('eth'), accounts[1], {from: accounts[1]});
+                await root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[1]});
             } catch (error) {
                 return exception.ensureException(error);
             }
@@ -113,7 +114,7 @@ contract('Root', function(accounts) {
                 '0x01234567'
             );
 
-            await root.registerTLD(dns.hexEncodeName('test.'), '');
+            await root.registerTLD(dns.hexEncodeName('test.'), '0x');
 
             assert.equal(await ens.owner(namehash.hash('test')), await root.registrar.call());
         });
@@ -128,7 +129,7 @@ contract('Root', function(accounts) {
             );
 
             try {
-                await root.registerTLD(dns.hexEncodeName('eth.'), '');
+                await root.registerTLD(dns.hexEncodeName('eth.'), '0x');
             } catch (error) {
                 return exception.ensureException(error);
             }
@@ -153,7 +154,7 @@ contract('Root', function(accounts) {
             );
 
             try {
-                await root.registerTLD(dns.hexEncodeName('test.'), '');
+                await root.registerTLD(dns.hexEncodeName('test.'), '0x');
             } catch (error) {
                 return exception.ensureException(error);
             }
@@ -252,11 +253,11 @@ contract('Root', function(accounts) {
                 dns.hexEncodeName('_ens.nic.test.'),
                 now,
                 now,
-                ''
+                '0x'
             );
 
             try {
-                await root.registerTLD(dns.hexEncodeName('test.'), '');
+                await root.registerTLD(dns.hexEncodeName('test.'), '0x');
             } catch (error) {
                 return exception.ensureException(error);
             }
@@ -317,10 +318,10 @@ contract('Root', function(accounts) {
 
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
 
-            utils.advanceTime(ttl * 2);
+            evm.advanceTime(ttl * 2);
 
             try {
-                await root.registerTLD(dns.hexEncodeName('test.'), 0);
+                await root.registerTLD(dns.hexEncodeName('test.'), '0x0');
             } catch (error) {
                 return exception.ensureException(error);
             }

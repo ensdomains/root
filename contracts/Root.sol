@@ -51,11 +51,11 @@ contract Root is Ownable {
         bytes32 label = getLabel(name);
 
         address addr = getAddress(name, proof);
-        require(ens.owner(keccak256(ROOT_NODE, label)) != addr);
+        require(ens.owner(keccak256(abi.encodePacked(ROOT_NODE, label))) != addr);
         require(label != ETH_NODE);
 
         ens.setSubnodeOwner(ROOT_NODE, label, addr);
-        emit TLDRegistered(keccak256(ROOT_NODE, label), addr);
+        emit TLDRegistered(keccak256(abi.encodePacked(ROOT_NODE, label)), addr);
     }
 
     function setResolver(bytes32 node, address resolver) public onlyOwner {
