@@ -2,7 +2,7 @@ const Root = artifacts.require('./Root.sol');
 const DNSSEC = artifacts.require('./mocks/DummyDNSSEC.sol');
 const ENS = artifacts.require('./ENSRegistry.sol');
 
-const { exception, evm } = require('@ensdomains/test-utils');
+const { exceptions, evm } = require('@ensdomains/test-utils');
 const namehash = require('eth-ens-namehash');
 const dns = require('../lib/dns.js');
 const sha3 = require('js-sha3').keccak_256;
@@ -36,7 +36,7 @@ contract('Root', function(accounts) {
             try {
                 await root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[1]});
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.fail('did not fail');
@@ -131,7 +131,7 @@ contract('Root', function(accounts) {
             try {
                 await root.registerTLD(dns.hexEncodeName('eth.'), '0x');
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.fail('did not fail');
@@ -156,7 +156,7 @@ contract('Root', function(accounts) {
             try {
                 await root.registerTLD(dns.hexEncodeName('test.'), '0x');
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
@@ -183,7 +183,7 @@ contract('Root', function(accounts) {
             try {
                 await root.registerTLD(dns.hexEncodeName('test.'), proof);
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.fail('did not fail');
@@ -259,7 +259,7 @@ contract('Root', function(accounts) {
             try {
                 await root.registerTLD(dns.hexEncodeName('test.'), '0x');
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
@@ -323,7 +323,7 @@ contract('Root', function(accounts) {
             try {
                 await root.registerTLD(dns.hexEncodeName('test.'), '0x0');
             } catch (error) {
-                return exception.ensureException(error);
+                return exceptions.ensureException(error);
             }
 
             assert.fail('did not fail');
