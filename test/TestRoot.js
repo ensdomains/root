@@ -86,7 +86,7 @@ contract('Root', function(accounts) {
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
 
             proof = dns.hexEncodeTXT({
-                name: '_ens.test.',
+                name: '_ens.nic.test.',
                 klass: 1,
                 ttl: 3600,
                 text: ['a=0x0000000000000000000000000000000000000000']
@@ -108,7 +108,7 @@ contract('Root', function(accounts) {
         it('should set TLD owner to default registrar when no TXT is provided', async () => {
             await dnssec.setData(
                 6,
-                dns.hexEncodeName('_ens.nic.test.'),
+                dns.hexEncodeName('test.'),
                 now,
                 now,
                 '0x01234567'
@@ -122,7 +122,7 @@ contract('Root', function(accounts) {
         it('should not allow setting ETH tld', async () => {
             await dnssec.setData(
                 6,
-                dns.hexEncodeName('_ens.nic.eth.'),
+                dns.hexEncodeName('eth.'),
                 now,
                 now,
                 '0x01234567'
@@ -285,7 +285,7 @@ contract('Root', function(accounts) {
 
             await dnssec.setData(
                 6,
-                dns.hexEncodeName('_ens.nic.test.'),
+                dns.hexEncodeName('test.'),
                 now,
                 now,
                 proof
