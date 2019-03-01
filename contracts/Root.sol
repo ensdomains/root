@@ -12,12 +12,12 @@ contract Root is Ownable {
     using BytesUtils for bytes;
     using Buffer for Buffer.buffer;
 
-    bytes32 public constant ROOT_NODE = bytes32(0);
-    bytes32 public constant ETH_NODE = keccak256("eth");
+    bytes32 constant ROOT_NODE = bytes32(0);
+    bytes32 constant ETH_NODE = keccak256("eth");
 
-    uint16 constant public CLASS_INET = 1;
-    uint16 constant public TYPE_TXT = 16;
-    uint16 constant public TYPE_SOA = 6;
+    uint16 constant CLASS_INET = 1;
+    uint16 constant TYPE_TXT = 16;
+    uint16 constant TYPE_SOA = 6;
 
     ENS public ens;
     DNSSEC public oracle;
