@@ -91,7 +91,7 @@ contract Root is Ownable {
         if (!found) {
             // If there is no TXT record, we ensure that the TLD actually exists with a SOA record.
             // This prevents registering bogus TLDs.
-            require(getSOAHash(buf.buf) != bytes20(0));
+            require(getSOAHash(name) != bytes20(0));
             return registrar;
         }
 
@@ -99,13 +99,8 @@ contract Root is Ownable {
     }
 
     function getSOAHash(bytes memory name) internal view returns (bytes20) {
-        Buffer.buffer memory buf;
-        buf.init(name.length + 5);
-        buf.append("\x04_ens");
-        buf.append(name);
-
         bytes20 hash;
-        (,, hash) = oracle.rrdata(TYPE_SOA, buf.buf);
+        (,, hash) = oracle.rrdata(TYPE_SOA, name);
 
         return hash;
     }
