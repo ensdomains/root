@@ -12,12 +12,12 @@ contract Root is Ownable {
     using BytesUtils for bytes;
     using Buffer for Buffer.buffer;
 
-    bytes32 public constant ROOT_NODE = bytes32(0);
-    bytes32 public constant ETH_NODE = keccak256("eth");
+    bytes32 constant private ROOT_NODE = bytes32(0);
+    bytes32 constant private ETH_NODE = keccak256("eth");
 
-    uint16 constant public CLASS_INET = 1;
-    uint16 constant public TYPE_TXT = 16;
-    uint16 constant public TYPE_SOA = 6;
+    uint16 constant private CLASS_INET = 1;
+    uint16 constant private TYPE_TXT = 16;
+    uint16 constant private TYPE_SOA = 6;
 
     ENS public ens;
     DNSSEC public oracle;
@@ -91,7 +91,7 @@ contract Root is Ownable {
         if (!found) {
             // If there is no TXT record, we ensure that the TLD actually exists with a SOA record.
             // This prevents registering bogus TLDs.
-            require(getSOAHash(buf.buf) != bytes20(0));
+            require(getSOAHash(name) != bytes20(0));
             return registrar;
         }
 
@@ -99,13 +99,8 @@ contract Root is Ownable {
     }
 
     function getSOAHash(bytes memory name) internal view returns (bytes20) {
-        Buffer.buffer memory buf;
-        buf.init(name.length + 5);
-        buf.append("\x04_ens");
-        buf.append(name);
-
         bytes20 hash;
-        (,, hash) = oracle.rrdata(TYPE_SOA, buf.buf);
+        (,, hash) = oracle.rrdata(TYPE_SOA, name);
 
         return hash;
     }
