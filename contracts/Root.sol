@@ -19,6 +19,13 @@ contract Root is Ownable {
     uint16 constant private TYPE_TXT = 16;
     uint16 constant private TYPE_SOA = 6;
 
+    bytes4 constant INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
+    bytes4 constant ROOT_REGISTRATION_ID = bytes4(
+        keccak256("proveAndRegisterTLD(bytes,bytes,bytes)") |
+        keccak256("registerTLD(bytes,bytes)") |
+        keccak256("oracle()")
+    );
+
     ENS public ens;
     DNSSEC public oracle;
 
@@ -103,5 +110,10 @@ contract Root is Ownable {
         (,, hash) = oracle.rrdata(TYPE_SOA, name);
 
         return hash;
+    }
+
+    function supportsInterface(bytes4 interfaceID) external pure returns (bool) {
+        return interfaceID == INTERFACE_META_ID ||
+               interfaceID == ROOT_REGISTRATION_ID;
     }
 }
