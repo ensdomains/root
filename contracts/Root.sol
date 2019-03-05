@@ -19,10 +19,10 @@ contract Root is Ownable {
     uint16 constant private TYPE_TXT = 16;
     uint16 constant private TYPE_SOA = 6;
 
-    bytes4 constant INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
-    bytes4 constant ROOT_REGISTRATION_ID = bytes4(
-        keccak256("proveAndRegisterTLD(bytes,bytes,bytes)") |
-        keccak256("registerTLD(bytes,bytes)") |
+    bytes4 constant private INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
+    bytes4 constant private ROOT_REGISTRATION_ID = bytes4(
+        keccak256("proveAndRegisterTLD(bytes,bytes,bytes)") ^
+        keccak256("registerTLD(bytes,bytes)") ^
         keccak256("oracle()")
     );
 
