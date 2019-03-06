@@ -17,7 +17,7 @@ contract Root is Ownable {
 
     uint16 constant private CLASS_INET = 1;
     uint16 constant private TYPE_TXT = 16;
-    uint16 constant private TYPE_SOA = 6;
+    uint16 constant private TYPE_DS = 43;
 
     bytes4 constant private INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
     bytes4 constant private ROOT_REGISTRATION_ID = bytes4(
@@ -96,18 +96,18 @@ contract Root is Ownable {
         bool found;
         (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
         if (!found) {
-            // If there is no TXT record, we ensure that the TLD actually exists with a SOA record.
+            // If there is no TXT record, we ensure that the TLD actually exists with a DS record.
             // This prevents registering bogus TLDs.
-            require(getSOAHash(name) != bytes20(0));
+            require(getDSHash(name) != bytes20(0));
             return registrar;
         }
 
         return addr;
     }
 
-    function getSOAHash(bytes memory name) internal view returns (bytes20) {
+    function getDSHash(bytes memory name) internal view returns (bytes20) {
         bytes20 hash;
-        (,, hash) = oracle.rrdata(TYPE_SOA, name);
+        (,, hash) = oracle.rrdata(TYPE_DS, name);
 
         return hash;
     }

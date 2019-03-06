@@ -107,7 +107,7 @@ contract('Root', function(accounts) {
 
         it('should set TLD owner to default registrar when no TXT is provided', async () => {
             await dnssec.setData(
-                6,
+                43,
                 dns.hexEncodeName('test.'),
                 now,
                 now,
@@ -121,7 +121,7 @@ contract('Root', function(accounts) {
 
         it('should not allow setting ETH tld', async () => {
             await dnssec.setData(
-                6,
+                43,
                 dns.hexEncodeName('eth.'),
                 now,
                 now,
@@ -137,7 +137,7 @@ contract('Root', function(accounts) {
             assert.fail('did not fail');
         });
 
-        it('should not allow submitting empty proof when SOA record is not present', async () => {
+        it('should not allow submitting empty proof when DS record is not present', async () => {
             let proof = dns.hexEncodeTXT({
                 name: '_ens.nic.test.',
                 klass: 1,
@@ -284,7 +284,7 @@ contract('Root', function(accounts) {
             );
 
             await dnssec.setData(
-                6,
+                43,
                 dns.hexEncodeName('test.'),
                 now,
                 now,
