@@ -22,6 +22,7 @@ contract Root is Ownable {
     bytes4 constant private INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
     bytes4 constant private ROOT_REGISTRATION_ID = bytes4(
         keccak256("proveAndRegisterTLD(bytes,bytes,bytes)") ^
+        keccak256("proveAndRegisterDefaultTLD(bytes,bytes,bytes)") ^
         keccak256("registerTLD(bytes,bytes)") ^
         keccak256("oracle()")
     );
@@ -42,6 +43,11 @@ contract Root is Ownable {
 
     function proveAndRegisterTLD(bytes calldata name, bytes calldata input, bytes calldata proof) external {
         registerTLD(name, oracle.submitRRSets(input, proof));
+    }
+
+    function proveAndRegisterDefaultTLD(bytes calldata name, bytes calldata input, bytes calldata proof) external {
+        oracle.submitRRSets(input, proof);
+        registerTLD(name, "");
     }
 
     function setSubnodeOwner(bytes32 label, address owner) external onlyOwner {
