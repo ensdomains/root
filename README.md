@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.com/ensdomains/root.svg?branch=master)](https://travis-ci.com/ensdomains/root) [![License](https://img.shields.io/badge/License-BSD--2--Clause-blue.svg)](LICENSE)
 
-This is a proof-of-concept implementation of the new ENS Root layered on top of the previous one as its owner.
+The Root is a contract that will take ownership of the ENS root name in the ENS registry. This allows the keyholders to delegate certain operations to others.
 
-This will allow for certain ```onlyOwner``` functions to be disintermediated from the root key holders.
+This contract was audited by ConsenSys dilligence; the audit report is available [here](https://github.com/ConsenSys/ens-audit-report-2019-02).
 
 ## DNSSEC
 
