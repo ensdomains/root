@@ -1,125 +1,38 @@
 pragma solidity ^0.5.0;
 
 import "@ensdomains/ens/contracts/ENS.sol";
-import "@ensdomains/dnssec-oracle/contracts/DNSSEC.sol";
-import "@ensdomains/dnssec-oracle/contracts/BytesUtils.sol";
-import "@ensdomains/dnsregistrar/contracts/DNSClaimChecker.sol";
-import "@ensdomains/buffer/contracts/Buffer.sol";
 import "./Ownable.sol";
+import "./Controllable.sol";
 
-contract Root is Ownable {
-
-    using BytesUtils for bytes;
-    using Buffer for Buffer.buffer;
-
+contract Root is Ownable, Controllable {
     bytes32 constant private ROOT_NODE = bytes32(0);
-    bytes32 constant private ETH_NODE = keccak256("eth");
-
-    uint16 constant private CLASS_INET = 1;
-    uint16 constant private TYPE_TXT = 16;
-    uint16 constant private TYPE_DS = 43;
 
     bytes4 constant private INTERFACE_META_ID = bytes4(keccak256("supportsInterface(bytes4)"));
-    bytes4 constant private ROOT_REGISTRATION_ID = bytes4(
-        keccak256("proveAndRegisterTLD(bytes,bytes,bytes)") ^
-        keccak256("proveAndRegisterDefaultTLD(bytes,bytes,bytes)") ^
-        keccak256("registerTLD(bytes,bytes)") ^
-        keccak256("oracle()")
-    );
+
+    event TLDLocked(bytes32 indexed label);
 
     ENS public ens;
-    DNSSEC public oracle;
+    mapping(bytes32=>bool) public locked;
 
-    address public registrar;
-
-    event TLDRegistered(bytes32 indexed node, address indexed registrar);
-    event RegistrarChanged(address indexed registrar);
-
-    constructor(ENS _ens, DNSSEC _oracle, address _registrar) public {
+    constructor(ENS _ens) public {
         ens = _ens;
-        oracle = _oracle;
-        registrar = _registrar;
     }
 
-    function proveAndRegisterTLD(bytes calldata name, bytes calldata input, bytes calldata proof) external {
-        registerTLD(name, oracle.submitRRSets(input, proof));
-    }
-
-    function proveAndRegisterDefaultTLD(bytes calldata name, bytes calldata input, bytes calldata proof) external {
-        oracle.submitRRSets(input, proof);
-        registerTLD(name, "");
-    }
-
-    function setSubnodeOwner(bytes32 label, address owner) external onlyOwner {
+    function setSubnodeOwner(bytes32 label, address owner) external onlyController {
+        require(!locked[label]);
         ens.setSubnodeOwner(ROOT_NODE, label, owner);
     }
 
-    function setRegistrar(address _registrar) external onlyOwner {
-        require(_registrar != address(0x0));
-        registrar = _registrar;
-        emit RegistrarChanged(registrar);
+    function setResolver(address resolver) external onlyOwner {
+        ens.setResolver(ROOT_NODE, resolver);
     }
 
-    function registerTLD(bytes memory name, bytes memory proof) public {
-        bytes32 label = getLabel(name);
-
-        address addr = getAddress(name, proof);
-        require(ens.owner(keccak256(abi.encodePacked(ROOT_NODE, label))) != addr);
-        require(label != ETH_NODE);
-
-        ens.setSubnodeOwner(ROOT_NODE, label, addr);
-        emit TLDRegistered(keccak256(abi.encodePacked(ROOT_NODE, label)), addr);
-    }
-
-    function setResolver(bytes32 node, address resolver) public onlyOwner {
-        ens.setResolver(node, resolver);
-    }
-
-    function setOwner(bytes32 node, address owner) public onlyOwner {
-        ens.setOwner(node, owner);
-    }
-
-    function setTTL(bytes32 node, uint64 ttl) public onlyOwner {
-        ens.setTTL(node, ttl);
-    }
-
-    function getLabel(bytes memory name) internal view returns (bytes32) {
-        uint len = name.readUint8(0);
-
-        require(name.length == len + 2);
-
-        return name.keccak(1, len);
-    }
-
-    function getAddress(bytes memory name, bytes memory proof) internal view returns (address) {
-        // Add "nic." to the front of the name.
-        Buffer.buffer memory buf;
-        buf.init(name.length + 4);
-        buf.append("\x03nic");
-        buf.append(name);
-
-        address addr;
-        bool found;
-        (addr, found) = DNSClaimChecker.getOwnerAddress(oracle, buf.buf, proof);
-        if (!found) {
-            // If there is no TXT record, we ensure that the TLD actually exists with a DS record.
-            // This prevents registering bogus TLDs.
-            require(getDSHash(name) != bytes20(0));
-            return registrar;
-        }
-
-        return addr;
-    }
-
-    function getDSHash(bytes memory name) internal view returns (bytes20) {
-        bytes20 hash;
-        (,, hash) = oracle.rrdata(TYPE_DS, name);
-
-        return hash;
+    function lock(bytes32 label) external onlyOwner {
+        emit TLDLocked(label);
+        locked[label] = true;
     }
 
     function supportsInterface(bytes4 interfaceID) external pure returns (bool) {
-        return interfaceID == INTERFACE_META_ID ||
-               interfaceID == ROOT_REGISTRATION_ID;
+        return interfaceID == INTERFACE_META_ID;
     }
 }
