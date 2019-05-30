@@ -14,13 +14,6 @@ module.exports = {
       gas: 5000000,
     }
   },
-  mocha: {
-    reporter: 'eth-gas-reporter',
-    reporterOptions : {
-      currency: 'USD',
-      gasPrice: 1
-    }
-  },
 /*  solc: {
     optimizer: {
       enabled: true,

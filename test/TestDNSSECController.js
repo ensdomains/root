@@ -1,7 +1,7 @@
 const Root = artifacts.require('./Root.sol');
 const DNSSECController = artifacts.require('./DNSSECController.sol');
 const DNSSEC = artifacts.require('./mocks/DummyDNSSEC.sol');
-const ENS = artifacts.require('@ensdomains/ens/contracts/ENSRegistry.sol');
+const ENS = artifacts.require('@ensdomains/ens/ENSRegistry');
 
 const { exceptions, evm } = require('@ensdomains/test-utils');
 const namehash = require('eth-ens-namehash');

@@ -1,19 +1,18 @@
 {
   "name": "@ensdomains/root",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "requires": true,
   "devDependencies": {
     "@ensdomains/buffer": "^0.0.7",
     "@ensdomains/dnsregistrar": "^0.3.1",
     "@ensdomains/dnssec-oracle": "^0.1.1",
-    "@ensdomains/ens": "^0.3.4",
+    "@ensdomains/ens": "^0.3.11",
     "@ensdomains/test-utils": "^1.2.0",
     "bluebird": "^3.5.2",
     "eth-ens-namehash": "^2.0.8",
-    "eth-gas-reporter": "^0.1.2",
     "js-sha3": "0.6.1",
     "solium": "^1.0.4",
-    "truffle": "^5.0.7"
+    "truffle": "^5.0.20"
   },
   "scripts": {
     "test": "truffle test",
