@@ -6,7 +6,7 @@
     "@ensdomains/buffer": "^0.0.7",
     "@ensdomains/dnsregistrar": "^0.3.1",
     "@ensdomains/dnssec-oracle": "^0.1.1",
-    "@ensdomains/ens": "^0.3.11",
+    "@ensdomains/ens": "^0.4.0",
     "@ensdomains/test-utils": "^1.2.0",
     "bluebird": "^3.5.2",
     "eth-ens-namehash": "^2.0.8",
