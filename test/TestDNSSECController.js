@@ -121,7 +121,7 @@ contract('DNSSECController', function(accounts) {
                 proof
             );
 
-            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
+            await exceptions.expectFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
@@ -143,7 +143,7 @@ contract('DNSSECController', function(accounts) {
                 proof
             );
 
-            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), proof));
+            await exceptions.expectFailure(controller.registerTLD(dns.hexEncodeName('test.'), proof));
         });
 
         it('allows changing a registered TLD on ENS', async () => {
@@ -213,7 +213,7 @@ contract('DNSSECController', function(accounts) {
                 '0x'
             );
 
-            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
+            await exceptions.expectFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
@@ -272,7 +272,7 @@ contract('DNSSECController', function(accounts) {
 
             evm.advanceTime(ttl * 2);
 
-            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x0'));
+            await exceptions.expectFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x0'));
         });
     });
 });
