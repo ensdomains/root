@@ -121,12 +121,7 @@ contract('Root', function(accounts) {
                 proof
             );
 
-            try {
-                await controller.registerTLD(dns.hexEncodeName('test.'), '0x');
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
+            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
@@ -148,13 +143,7 @@ contract('Root', function(accounts) {
                 proof
             );
 
-            try {
-                await controller.registerTLD(dns.hexEncodeName('test.'), proof);
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
-            assert.fail('did not fail');
+            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), proof));
         });
 
         it('allows changing a registered TLD on ENS', async () => {
@@ -224,12 +213,7 @@ contract('Root', function(accounts) {
                 '0x'
             );
 
-            try {
-                await controller.registerTLD(dns.hexEncodeName('test.'), '0x');
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
+            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
@@ -288,13 +272,7 @@ contract('Root', function(accounts) {
 
             evm.advanceTime(ttl * 2);
 
-            try {
-                await controller.registerTLD(dns.hexEncodeName('test.'), '0x0');
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
-            assert.fail('did not fail');
+            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x0'));
         });
     });
 });
