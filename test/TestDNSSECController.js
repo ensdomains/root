@@ -8,7 +8,7 @@ const namehash = require('eth-ens-namehash');
 const dns = require('../lib/dns.js');
 const sha3 = require('js-sha3').keccak_256;
 
-contract('Root', function(accounts) {
+contract('DNSSECController', function(accounts) {
 
     let node;
     let ens, dnssec, root, controller;
@@ -121,7 +121,7 @@ contract('Root', function(accounts) {
                 proof
             );
 
-            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
+            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), "0x0000000000000000000000000000000000000000");
         });
 
@@ -143,7 +143,7 @@ contract('Root', function(accounts) {
                 proof
             );
 
-            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), proof));
+            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), proof));
         });
 
         it('allows changing a registered TLD on ENS', async () => {
@@ -213,7 +213,7 @@ contract('Root', function(accounts) {
                 '0x'
             );
 
-            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
+            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x'));
             assert.equal(await ens.owner(namehash.hash('test')), accounts[0]);
         });
 
@@ -272,7 +272,7 @@ contract('Root', function(accounts) {
 
             evm.advanceTime(ttl * 2);
 
-            await exceptions.ensureFailue(controller.registerTLD(dns.hexEncodeName('test.'), '0x0'));
+            await exceptions.ensureFailure(controller.registerTLD(dns.hexEncodeName('test.'), '0x0'));
         });
     });
 });
