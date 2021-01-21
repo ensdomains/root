@@ -31,25 +31,12 @@ contract('Root', function(accounts) {
         });
 
         it('should fail when non-controller tries to set subnode', async () => {
-            try {
-                await root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[1]});
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
-            assert.fail('did not fail');
+            await exceptions.expectFailure(root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[1]}));
         });
 
         it('should not allow setting a locked TLD', async () => {
             await root.lock('0x' + sha3('eth'));
-
-            try {
-                await root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[0]});
-            } catch (error) {
-                return exceptions.ensureException(error);
-            }
-
-            assert.fail('did not fail');
+            await exceptions.expectFailure(root.setSubnodeOwner('0x' + sha3('eth'), accounts[1], {from: accounts[0]}));
         });
     });
 });
