@@ -10,7 +10,7 @@
     "eth-ens-namehash": "^2.0.8",
     "js-sha3": "0.6.1",
     "solium": "^1.0.4",
-    "truffle": "^5.1.62"
+    "truffle": "^5.7.1"
   },
   "scripts": {
     "test": "truffle test",
